@@ -9,12 +9,11 @@ internal class MatchShould {
         equipeA = Perpignan,
         equipeB = Bordeaux,
         marques = listOf(
-/**/
-            ActionDeMarque(8, Bordeaux, EssaiTransformé),
-            ActionDeMarque(10, Perpignan, EssaiTransformé),
+            ActionDeMarque(8, Bordeaux, EssaiTransforme),
+            ActionDeMarque(10, Perpignan, EssaiTransforme),
             ActionDeMarque(28, Perpignan, Penalite),
             ActionDeMarque(32, Bordeaux, Essai),
-            ActionDeMarque(34, Perpignan, EssaiTransformé),
+            ActionDeMarque(34, Perpignan, EssaiTransforme),
             ActionDeMarque(53, Perpignan, Essai),
             ActionDeMarque(61, Bordeaux, Penalite),
         ),
