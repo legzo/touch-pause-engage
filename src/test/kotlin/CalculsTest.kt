@@ -104,6 +104,42 @@ internal class CalculsTest {
             first() shouldBe (2 to 2)
             last() shouldBe (5 to 0)
         }
+    }
+
+
+    @Test
+    fun `calcule l'evolution du classement`() {
+        val classementInitial = Classement(
+            equipes = mapOf(
+                Bordeaux to PositionClassement(72, 133),
+                Perpignan to PositionClassement(39, -180),
+                Toulouse to PositionClassement(66, 133),
+                Biarritz to PositionClassement(24, -363)
+            )
+        )
+        val evolClassement = calculeEvolutionClassement(
+            classementInitial, setOf(matchPerpignanBordeaux, matchToulouseBiarritz)
+        )
+
+        with(evolClassement) {
+            first() shouldBe classementInitial
+            last() shouldBe Classement(
+                equipes = mapOf(
+                    Bordeaux to PositionClassement(72, 126),
+                    Perpignan to PositionClassement(43, -173),
+                    Toulouse to PositionClassement(71, 206),
+                    Biarritz to PositionClassement(24, -436)
+                )
+            )
+
+            last().sorted().map { it.key } shouldBe listOf(
+                Bordeaux,
+                Toulouse,
+                Perpignan,
+                Biarritz
+            )
+        }
+
 
     }
 }

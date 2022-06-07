@@ -38,6 +38,39 @@ data class Match(
     val marques: List<ActionDeMarque>,
 )
 
+data class Classement(
+    val equipes: Map<Equipe, PositionClassement>
+) {
+    operator fun get(equipe: Equipe): PositionClassement = equipes[equipe] ?: throw IllegalArgumentException("Err !")
+
+    fun sorted(): List<Map.Entry<Equipe, PositionClassement>> =
+        equipes.entries
+            .sortedWith(
+                compareBy(
+                    { (_, position) -> position.points },
+                    { (_, position) -> position.differenceDePoints })
+            ).reversed()
+}
+
+data class PositionClassement(
+    val points: Int,
+    val differenceDePoints: Int
+) {
+    fun update(
+        pointsAdditionnels: Int,
+        scoreAdditionnel: Int
+    ) =
+        this.copy(
+            points = points + pointsAdditionnels,
+            differenceDePoints = differenceDePoints + scoreAdditionnel
+        )
+
+    override fun toString(): String {
+        return "$points ($differenceDePoints)"
+    }
+}
+
+
 internal fun List<ActionDeMarque>.essaisEquipe(equipe: Equipe) =
     this
         .filter { it.equipe == equipe }
