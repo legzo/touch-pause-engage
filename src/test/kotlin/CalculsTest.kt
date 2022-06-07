@@ -3,7 +3,7 @@ import Marque.*
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 
-internal class MatchShould {
+internal class CalculsTest {
 
     private val matchPerpignanBordeaux = Match(
         equipeA = Perpignan,
@@ -17,6 +17,26 @@ internal class MatchShould {
             ActionDeMarque(53, Perpignan, Essai),
             ActionDeMarque(61, Bordeaux, Penalite),
         ),
+    )
+
+    private val matchToulouseBiarritz = Match(
+        equipeA = Toulouse,
+        equipeB = Biarritz,
+        marques = listOf(
+            ActionDeMarque(8, Toulouse, EssaiTransforme),
+            ActionDeMarque(12, Toulouse, EssaiTransforme),
+            ActionDeMarque(30, Biarritz, EssaiTransforme),
+            ActionDeMarque(36, Toulouse, EssaiTransforme),
+            ActionDeMarque(41, Toulouse, Essai),
+            ActionDeMarque(42, Toulouse, EssaiTransforme),
+            ActionDeMarque(45, Toulouse, EssaiTransforme),
+            ActionDeMarque(52, Toulouse, EssaiTransforme),
+            ActionDeMarque(57, Toulouse, Essai),
+            ActionDeMarque(71, Toulouse, EssaiTransforme),
+            ActionDeMarque(73, Toulouse, EssaiTransforme),
+            ActionDeMarque(75, Toulouse, EssaiTransforme),
+            ActionDeMarque(79, Toulouse, EssaiTransforme),
+        )
     )
 
     @Test
@@ -38,6 +58,11 @@ internal class MatchShould {
         with(calculeScore(matchPerpignanBordeaux)) {
             scoreEquipeA shouldBe 22
             scoreEquipeB shouldBe 15
+        }
+
+        with(calculeScore(matchToulouseBiarritz)) {
+            scoreEquipeA shouldBe 80
+            scoreEquipeB shouldBe 7
         }
     }
 
@@ -72,5 +97,13 @@ internal class MatchShould {
                     4 to 0,
                     4 to 0,
                 )
+
+        with(calculeEvolutionScore(matchToulouseBiarritz)
+            .map { it.toPoints() }
+            .map { it.pointsEquipeA to it.pointsEquipeB }) {
+            first() shouldBe (2 to 2)
+            last() shouldBe (5 to 0)
+        }
+
     }
 }
