@@ -1,8 +1,10 @@
 import Marque.Essai
 import Marque.EssaiTransforme
+import Marque.Penalite
+import kotlinx.serialization.Serializable
 
 enum class Equipe {
-    Bordeaux, Perpignan, Toulouse, Biarritz
+    Biarritz, Bordeaux, Brive, Castres, Clermont, LaRochelle, Lyon, Montpellier, Pau, Perpignan, Racing92, StadeFrancais, Toulon, Toulouse
 }
 
 enum class Marque(val points: Int) {
@@ -13,7 +15,13 @@ data class ActionDeMarque(
     val minute: Int,
     val equipe: Equipe,
     val action: Marque,
-)
+) {
+    companion object {
+        fun essaiTransforme(minute: Int, equipe: Equipe) = ActionDeMarque(minute, equipe, EssaiTransforme)
+        fun essai(minute: Int, equipe: Equipe) = ActionDeMarque(minute, equipe, Essai)
+        fun penalite(minute: Int, equipe: Equipe) = ActionDeMarque(minute, equipe, Penalite)
+    }
+}
 
 data class Score(
     val minute: Int,
@@ -39,6 +47,7 @@ data class Match(
 )
 
 data class Classement(
+    val minute: Int = 0,
     val equipes: Map<Equipe, PositionClassement>
 ) {
     operator fun get(equipe: Equipe): PositionClassement = equipes[equipe] ?: throw IllegalArgumentException("Err !")
@@ -70,6 +79,12 @@ data class PositionClassement(
     }
 }
 
+@Serializable
+data class Position(
+    val minute: Int,
+    val equipe: Equipe,
+    val classement: Int,
+)
 
 internal fun List<ActionDeMarque>.essaisEquipe(equipe: Equipe) =
     this

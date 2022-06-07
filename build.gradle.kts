@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     java
     kotlin("jvm") version "1.6.21"
+    kotlin("plugin.serialization") version "1.6.21"
     id("com.github.ben-manes.versions") version "0.42.0"
 }
 
@@ -16,6 +17,7 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.slf4j:slf4j-api:1.7.36")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 
     testImplementation("ch.qos.logback:logback-classic:1.2.11")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")

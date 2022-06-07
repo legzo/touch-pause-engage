@@ -1,3 +1,6 @@
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+
 fun calculeScore(match: Match) = calculeEvolutionScore(match).last()
 
 fun calculeEvolutionScore(match: Match): List<Score> =
@@ -50,26 +53,51 @@ private fun calculePoints(
     return pointsRelatifsAuScore + bonusOffensif + bonusDefensif
 }
 
-fun calculeEvolutionClassement(classementInitial: Classement, matches: Set<Match>): List<Classement> {
-    val actionsDeMarque = matches
+fun calculeEvolutionClassement(
+    classementInitial: Classement,
+    matches: Set<Match>
+): List<Classement> =
+    matches
         .flatMap { calculeEvolutionScore(it).drop(1) }
         .sortedBy { it.minute }
-
-    return actionsDeMarque
         .scan(classementInitial) { classement, score ->
-
             val points = score.toPoints()
-
             classement.copy(
+                minute = score.minute,
                 equipes = classement.equipes.mapValues { (equipe, pointsAuClassement) ->
                     when {
                         points.equipeA == equipe ->
-                            classementInitial[equipe].update(points.pointsEquipeA, score.scoreEquipeA - score.scoreEquipeB)
+                            classementInitial[equipe].update(
+                                points.pointsEquipeA,
+                                score.scoreEquipeA - score.scoreEquipeB
+                            )
                         points.equipeB == equipe ->
-                            classementInitial[equipe].update(points.pointsEquipeB, score.scoreEquipeB - score.scoreEquipeA)
+                            classementInitial[equipe].update(
+                                points.pointsEquipeB,
+                                score.scoreEquipeB - score.scoreEquipeA
+                            )
                         else -> pointsAuClassement
                     }
                 }
             )
         }
+
+
+fun calculeStatsEvolutionClassement(
+    classementInitial: Classement,
+    matches: Set<Match>
+): String {
+    val stats = calculeEvolutionClassement(classementInitial, matches).toStats()
+    return Json.encodeToString(stats)
 }
+
+fun List<Classement>.toStats(): List<Position> =
+    flatMap {
+       it.sorted().mapIndexed { index, position ->
+           Position(
+               minute = it.minute,
+               equipe = position.key,
+               classement = index + 1
+           )
+       }
+    }
