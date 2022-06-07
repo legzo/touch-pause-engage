@@ -82,7 +82,7 @@ data class PositionClassement(
 @Serializable
 data class Position(
     val minute: Int,
-    val equipe: Equipe,
+    val equipe: String,
     val classement: Int,
 )
 

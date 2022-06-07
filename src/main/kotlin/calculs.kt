@@ -91,13 +91,34 @@ fun calculeStatsEvolutionClassement(
     return Json.encodeToString(stats)
 }
 
-fun List<Classement>.toStats(): List<Position> =
-    flatMap {
-       it.sorted().mapIndexed { index, position ->
-           Position(
-               minute = it.minute,
-               equipe = position.key,
-               classement = index + 1
-           )
-       }
+fun List<Classement>.toStats(): List<Position> {
+
+    val classementAvant: List<Equipe> = first().sorted().map { it.key }
+    val classementApres: List<Equipe> = last().sorted().map { it.key }
+
+    val nomsAvecInfo: Map<Equipe, String> = libellesEquipes(classementAvant, classementApres)
+
+    return flatMap {
+        it.sorted().mapIndexed { index, position ->
+            Position(
+                minute = it.minute,
+                equipe = nomsAvecInfo[position.key] ?: position.key.toString(),
+                classement = index + 1
+            )
+        }
     }
+}
+
+private fun libellesEquipes(
+    classementAvant: List<Equipe>,
+    classementApres: List<Equipe>
+): Map<Equipe, String> {
+    val nomsAvecInfo: Map<Equipe, String> = Equipe.values().associateWith {
+        val positionAvant = classementAvant.indexOf(it) + 1
+        val positionApres = classementApres.indexOf(it) + 1
+        if (positionAvant != positionApres) {
+            "$it ($positionAvant → $positionApres)"
+        } else "$it"
+    }
+    return nomsAvecInfo
+}
