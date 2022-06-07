@@ -21,4 +21,8 @@ Et ça donne ça !
 
 ![screenshot](./screenshot.png)
 
-Enjoy ❤
+Dans un premier temps, j'ai généré le JSON en one-shot (depuis un TU 😱) et
+injecté le JSON dans le HTML, dans l'idéal, il faudrait probablement APIser ça.
+Mais ce sera pour une prochaine fois !
+
+❤
